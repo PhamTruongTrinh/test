@@ -1,0 +1,75 @@
+Index: app.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#import libraries\r\nimport numpy as np\r\nfrom flask import Flask, request, jsonify, render_template, redirect\r\nimport pickle\r\n\r\n#Initialize the flask App\r\napp = Flask(__name__)\r\nmodel = pickle.load(open('model.pkl', 'rb'))\r\n\r\n#default page of our web-app\r\n\r\n@app.route('/some_route')\r\ndef some_route():\r\n    return redirect('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', code=302)\r\n#To use the predict button in our web-app\r\n@app.route('https://phamtruongtrinh.github.io/dubaoratruongdunghan/',methods=['POST'])\r\ndef predict():\r\n    '''\r\n    For rendering results on HTML GUI\r\n    '''\r\n    int_features = [float(x) for x in request.form.values()]\r\n    final_features = [np.array(int_features)]\r\n    prediction = model.predict(final_features)\r\n\r\n    output = round(prediction[0])\r\n    int(output)\r\n    if output == 1:\r\n        return render_template('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', prediction_text='Chúc mừng rất có thể bạn sẽ ra trường đúng hạn')\r\n    if output == 0:\r\n        return render_template('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', prediction_text='Có thể bạn sẽ ra trường không đúng hạn. Hãy cố gắng hơn trong học tập')\r\n\r\nif __name__ == \"__main__\":\r\n    app.run(debug=True)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app.py b/app.py
+--- a/app.py	(revision 1dd9b826dd2a322216e599f282ef18ee1cc358e8)
++++ b/app.py	(date 1686580856631)
+@@ -8,12 +8,11 @@
+ model = pickle.load(open('model.pkl', 'rb'))
+ 
+ #default page of our web-app
+-
+-@app.route('/some_route')
+-def some_route():
+-    return redirect('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', code=302)
++@app.route('/my_page')
++def my_page():
++    return redirect('https://phamtruongtrinh.github.io/dubaoratruongdunghan/index.html')
+ #To use the predict button in our web-app
+-@app.route('https://phamtruongtrinh.github.io/dubaoratruongdunghan/',methods=['POST'])
++@app.route('/predict',methods=['POST'])
+ def predict():
+     '''
+     For rendering results on HTML GUI
+@@ -25,9 +24,8 @@
+     output = round(prediction[0])
+     int(output)
+     if output == 1:
+-        return render_template('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', prediction_text='Chúc mừng rất có thể bạn sẽ ra trường đúng hạn')
++        return redirect('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', prediction_text='mừng rất có thể bạn sẽ ra trường đúng hạn')
+     if output == 0:
+-        return render_template('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', prediction_text='Có thể bạn sẽ ra trường không đúng hạn. Hãy cố gắng hơn trong học tập')
+-
++        return redirect('https://phamtruongtrinh.github.io/dubaoratruongdunghan/', prediction_text='Chúc mừng rất có thể bạn sẽ ra trường đúng hạn')
+ if __name__ == "__main__":
+-    app.run(debug=True)
++    app.run(debug=True)
+\ No newline at end of file
+Index: templates/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html\r\n\tPUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"number/html; charset=utf-8\" />\r\n    <title>Dự báo khả năng ra trường đúng hạn của sinh viên năm 4</title>\r\n    <style>\r\n        .head {\r\n            width: 98%;\r\n            height: 11%;\r\n            background-color: #070186;\r\n            padding: 1%;\r\n            color: #FFFFFF;\r\n        }\r\n        \r\n        .input {\r\n            width: 26.3%;\r\n            float: left;\r\n            margin-left: 5%;\r\n            margin-top: 2%;\r\n            border: 2px solid rgb(0, 17, 255);\r\n            border-radius: 10px;\r\n        }\r\n        \r\n        .input>p>span {\r\n            margin-left: 10px;\r\n        }\r\n        \r\n        .input>p>input {\r\n            float: right;\r\n            margin-right: 10px;\r\n            margin-top: -5px;\r\n            height: 22px;\r\n            width: 28%;\r\n            font-size: 17px;\r\n            font-weight: bold;\r\n        }\r\n        \r\n        .input>p {\r\n            font-weight: bolder;\r\n            font-size: 20px;\r\n            color: #000000;\r\n        }\r\n        \r\n        .ket_qua {\r\n            width: 900px;\r\n            font-family: sans-serif;\r\n            font-size: x-large;\r\n            color: #ff0000;\r\n            font-weight: bolder;\r\n            margin-left: 229px;\r\n            margin-top: 485px;\r\n        }\r\n        \r\n        .btn {\r\n            width: 264px;\r\n            float: right;\r\n            margin-right: 560px;\r\n            margin-top: 28px;\r\n        }\r\n        \r\n        .btn:hover button {\r\n            background-color: #291FFA;\r\n            color: white;\r\n        }\r\n        \r\n        html,\r\n        body {\r\n            margin: 0;\r\n            height: 100%;\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div style=\"background-color: #FFFFFF; height: 100%;\">\r\n        <div class=\"head\" ; align=\"center\">\r\n            <h1>DỰ BÁO KHẢ NĂNG RA TRƯỜNG ĐÚNG HẠN CỦA SINH VIÊN NĂM 4</h1>\r\n        </div>\r\n        <!-- Main Input For Receiving Query to our ML -->\r\n        <form action=\"{{url_for('predict')}}\" method=\"post\" style=\"margin-top: 0%;\">\r\n            <div class=\"input\">\r\n                <p align=\"center\">HỌC KỲ I</p>\r\n                <p><span>Số tín chỉ đạt</span><input type=\"number\" min=\"0\" max=\"25\" name=\"tcd1\" required=\"required\" ;>\r\n                </p>\r\n                <p><span>Số tín chỉ rớt</span><input type=\"number\" name=\"tcr1\" required=\"required\" ;></p>\r\n                <p><span>Điểm trung bình hệ 10</span><input type=\"number\" min=\"0\" max=\"10\" step=\"0.01\" name=\"dtb1\" required=\"required\" ;></p>\r\n            </div>\r\n\r\n            <div class=\"input\">\r\n                <p align=\"center\">HỌC KỲ III</p>\r\n                <p><span>Số tín chỉ đạt</span><input type=\"number\" min=\"0\" max=\"25\" name=\"tcd3\" required=\"required\" ;>\r\n                </p>\r\n                <p><span>Số tín chỉ rớt</span><input type=\"number\" name=\"tcr3\" required=\"required\" ;></p>\r\n                <p><span>Điểm trung bình hệ 10</span><input type=\"number\" min=\"0\" max=\"10\" step=\"0.01\" name=\"dtb3\" required=\"required\" ;></p>\r\n            </div>\r\n            <div class=\"input\">\r\n                <p align=\"center\">HỌC KỲ V</p>\r\n                <p><span>Số tín chỉ đạt</span><input type=\"number\" min=\"0\" max=\"25\" name=\"tcd5\" required=\"required\" ;></p>\r\n                <p><span>Số tín chỉ rớt</span><input type=\"number\" name=\"tcr5\" required=\"required\" ;></p>\r\n                <p><span>Điểm trung bình hệ 10</span><input type=\"number\" min=\"0\" max=\"10\" step=\"0.01\" name=\"dtb5\" required=\"required\" ;></p>\r\n            </div>\r\n\r\n            <div class=\"input\">\r\n                <p align=\"center\">HỌC KỲ II</p>\r\n                <p><span>Số tín chỉ đạt</span><input type=\"number\" min=\"0\" max=\"25\" name=\"tcd2\" required=\"required\" ;>\r\n                </p>\r\n                <p><span>Số tín chỉ rớt</span><input type=\"number\" name=\"tcr2\" required=\"required\" ;></p>\r\n                <p><span>Điểm trung bình hệ 10</span><input type=\"number\" min=\"0\" max=\"10\" step=\"0.01\" name=\"dtb2\" required=\"required\" ;></p>\r\n            </div>\r\n            <div class=\"input\">\r\n                <p align=\"center\">HỌC KỲ IV</p>\r\n                <p><span>Số tín chỉ đạt</span><input type=\"number\" min=\"0\" max=\"25\" name=\"tcd4\" required=\"required\" ;></p>\r\n                <p><span>Số tín chỉ rớt</span><input type=\"number\" name=\"tcr4\" required=\"required\" ;></p>\r\n                <p><span>Điểm trung bình hệ 10</span><input type=\"number\" min=\"0\" max=\"10\" step=\"0.01\" name=\"dtb4\" required=\"required\" ;></p>\r\n\r\n            </div>\r\n            <div class=\"input\">\r\n                <p align=\"center\">HỌC KỲ VI</p>\r\n                <p><span>Số tín chỉ đạt</span><input type=\"number\" min=\"0\" max=\"25\" name=\"tcd6\" required=\"required\" ;></p>\r\n                <p><span>Số tín chỉ rớt</span><input type=\"number\" name=\"tcr6\" required=\"required\" ;></p>\r\n                <p><span>Điểm trung bình hệ 10</span><input type=\"number\" min=\"0\" max=\"10\" step=\"0.01\" name=\"dtb6\" required=\"required\" ;></p>\r\n\r\n            </div>\r\n            <div class=\"btn\">\r\n                <button style=\"height: 36px; width: 264px;  font-weight: bolder; font-size: 17px\" type=\"submit\">DỰ BÁO</button>\r\n            </div>\r\n        </form>\r\n\t    \r\n        <br>\r\n        <br>\r\n        <div class=\"ket_qua\" align=\"center\">\r\n            {{ prediction_text }}\r\n        </div>\r\n    </div>\r\n</body>\r\n\r\n</html>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/templates/index.html b/templates/index.html
+--- a/templates/index.html	(revision 1dd9b826dd2a322216e599f282ef18ee1cc358e8)
++++ b/templates/index.html	(date 1686580168562)
+@@ -76,7 +76,7 @@
+ <body>
+     <div style="background-color: #FFFFFF; height: 100%;">
+         <div class="head" ; align="center">
+-            <h1>DỰ BÁO KHẢ NĂNG RA TRƯỜNG ĐÚNG HẠN CỦA SINH VIÊN NĂM 4</h1>
++            <h1>DỰ BÁO KHẢ NĂNG RA TRƯỜNG ĐÚNG HẠN CỦA SINH VIÊN NĂM</h1>
+         </div>
+         <!-- Main Input For Receiving Query to our ML -->
+         <form action="{{url_for('predict')}}" method="post" style="margin-top: 0%;">
+Index: .idea/.name
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Procfile
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.name b/.idea/.name
+--- a/.idea/.name	(revision 1dd9b826dd2a322216e599f282ef18ee1cc358e8)
++++ b/.idea/.name	(date 1686580168711)
+@@ -1,1 +1,1 @@
+-Procfile
+\ No newline at end of file
++app.py
+\ No newline at end of file
